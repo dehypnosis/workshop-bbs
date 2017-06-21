@@ -1,0 +1,12 @@
+<% include ../header %>
+
+<% helper.makeForm({
+  name: 'login',
+  method: 'post',
+  fields: [
+    {name:'uid', type: 'text', placeholder: 'ID'},
+    {name:'password', type: 'text', placeholder: 'Password'},
+  ]
+}); %>
+
+<% include ../footer %>

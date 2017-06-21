@@ -1,0 +1,22 @@
+<% include ./helper %>
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/css/master.css">
+</head>
+<body>
+<main>
+  <aside>
+    <nav>
+    <% boards.forEach(_board => { %>
+      <a href="/?board=<%=_board.name%>%>" class="<%=(board.name == _board.name) ? 'active':''%>"><%=_board.title%></a>
+    <% }); %>
+    <% if (user) { %>
+      <p><%=user.name%>님 안녕하세요.</p>
+      <a href="#" onclick="bbs.User.logout(); return false;">로그아웃해!</a>
+    <% } else { %>
+      <a href="/user/login" class="<%=(path == '/user/login') ? 'active':''%>">로그인해!</a>
+      <a href="/user/join" class="<%=(path == '/user/join') ? 'active':''%>">가입해!</a>
+    <% } %>
+    </nav>
+  </aside>
+  <section>

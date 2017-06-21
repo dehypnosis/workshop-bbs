@@ -1,0 +1,37 @@
+<%
+helper = {
+  makeForm: (options = {}) => {
+    let {name, method, action, fields} = options;
+    let data = forms[name] || {};
+    if (!data.values) data.values = {};
+    if (!data.errors) data.errors = [];
+%>
+
+<form name="<%=name%>" method="<%=method || 'POST'%>" action="<%=action || ''%>">
+<%
+  fields.forEach(field => {
+    let fieldErrors = data.errors.filter(error => error.field == field.name);
+%>
+  <div>
+    <input
+      class="<%=fieldErrors.length > 0 ? 'error': ''%>"
+      value="<%=data.values[field.name]%>"
+      type="<%=field.type || 'text'%>" name="<%=field.name%>" placeholder="<%=field.placeholder%>">
+  </div>
+  <% fieldErrors.forEach(error => { %>
+    <p class="error"><%=error.message%></p>
+  <% }); %>
+<%
+  });
+%>
+<% data.errors.filter(error => !error.field).forEach(error => { %>
+  <p class="error"><%=error.message%></p>
+<% }); %>
+  <div>
+    <input type="submit" value="제출">
+  </div>
+</form>
+<%
+  }
+};
+%>

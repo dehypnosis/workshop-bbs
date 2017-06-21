@@ -1,0 +1,14 @@
+<% include ../header %>
+
+<% helper.makeForm({
+  name: 'join',
+  method: 'post',
+  fields: [
+    {name:'uid', type: 'text', placeholder: 'ID'},
+    {name:'name', type: 'text', placeholder: 'Name'},
+    {name:'password', type: 'text', placeholder: 'Password'},
+    {name:'password_confirm', type: 'text', placeholder: 'Password Confirm'}
+  ]
+}); %>
+
+<% include ../footer %>

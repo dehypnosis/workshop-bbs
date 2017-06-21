@@ -1,0 +1,28 @@
+aside nav a {
+  text-decoration: none;
+  display: inline-block;
+  border: 1px solid #333;
+  padding:5px 10px;
+}
+aside nav a.active {
+  color: red;
+  font-weight:bold;
+}
+input {
+  border: 1px solid black;
+  padding: 5px 3px;
+  margin: 0 0 10px 0;
+}
+input.error {
+  border:1px solid red;
+}
+p.error {
+  font-size: 0.7em;
+  color:red;
+}
+
+main > section {
+  padding: 30px 20px;
+  margin: 10px 0 0 0;
+  border: 1px solid black;
+}
