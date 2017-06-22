@@ -8,10 +8,10 @@
   <aside>
     <nav>
     <% boards.forEach(_board => { %>
-      <a href="/?board=<%=_board.name%>%>" class="<%=(board.name == _board.name) ? 'active':''%>"><%=_board.title%></a>
+      <a href="/?board=<%=_board.name%>%>" class="<%=(typeof board != 'undefined' && board.name == _board.name) ? 'active':''%>"><%=_board.title%></a>
     <% }); %>
     <% if (user) { %>
-      <p><%=user.name%>님 안녕하세요.</p>
+      <a><%=user.name%>님 안녕하세요.</a>
       <a href="#" onclick="bbs.User.logout(); return false;">로그아웃해!</a>
     <% } else { %>
       <a href="/user/login" class="<%=(path == '/user/login') ? 'active':''%>">로그인해!</a>

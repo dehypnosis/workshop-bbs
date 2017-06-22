@@ -12,18 +12,28 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('Listen to ', port));
 
 // Middlewares
+// static files
 app.use('/assets', express.static(path.join(__dirname, 'static')));
+
+// session
+const MySQLStore = require('express-mysql-session')(session);
+const sessionStore = new MySQLStore(config.mysql);
 app.use(session({
   secret: config.secret,
+  store: sessionStore,
   resave: false,
   saveUninitialized: true,
 }));
+
+// body parser
 app.use(bodyParser.urlencoded({extended:true}));
+
+// templates
 app.use(require('./middles/locals'));
 
 // Routers
-app.use('/', require('./routers/bbs'));
 app.use('/user', require('./routers/user'));
+app.use('/', require('./routers/bbs'));
 
 // Not Found Error
 app.use(require('./middles/not-found'));
