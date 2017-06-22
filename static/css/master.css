@@ -26,3 +26,37 @@ main > section {
   margin: 10px 0 0 0;
   border: 1px solid black;
 }
+
+.board {}
+.board .row {
+  border-bottom: 1px solid gray;
+  padding: 5px;
+}
+.board .row::after {
+  content: "";
+  clear:both;
+  display:block;
+}
+.board .row > div {
+  float:left;
+  padding: 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.board .header .row > div {
+  text-align: center;
+  font-weight: bold;
+}
+.board .row.center > div
+.board .row > .id {
+  width: 40px;
+}
+.board .row > .author {
+  width: 100px;
+}
+.board .row > .title {
+  width: calc(100% - 280px);
+}
+.board .row > .date {
+  width: 100px;
+}

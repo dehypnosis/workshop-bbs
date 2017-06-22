@@ -13,11 +13,14 @@ router.use((req,res,next) => {
 
 router.get('/', (req,res) => {
   let board = res.locals.board;
+
   db.query('select * from articles where board_id = ?', [board.id],
     (err, rows) => {
       if (err) throw err;
 
-      res.render('bbs/list');
+      res.render('bbs/list', {
+        articles: rows
+      });
     });
 });
 
