@@ -40,6 +40,7 @@ main > section {
 .board .row > div {
   float:left;
   padding: 5px;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -47,15 +48,17 @@ main > section {
   text-align: center;
   font-weight: bold;
 }
-.board .row.center > div
+.board .row > div.center {
+  text-align: center;
+}
 .board .row > .id {
-  width: 40px;
+  width: 70px;
 }
 .board .row > .author {
   width: 100px;
 }
 .board .row > .title {
-  width: calc(100% - 280px);
+  width: calc(100% - 320px);
 }
 .board .row > .date {
   width: 100px;

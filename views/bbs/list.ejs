@@ -16,10 +16,10 @@
     <div class="body">
       <% articles.forEach(article => { %>
       <div class="row">
-        <div class="id"><%=article.id%></div>
+        <div class="id center"><%=article.id%></div>
         <div class="title"><%=article.title%></div>
-        <div class="author"><%=article.user_id%></div>
-        <div class="date"><%=article.created%></div>
+        <div class="author center"><%=article.user_id%></div>
+        <div class="date center"><%=article.createdAt%></div>
       </div>
       <% }); %>
     </div>
