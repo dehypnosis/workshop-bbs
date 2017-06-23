@@ -11,6 +11,9 @@ app.set('view engine', 'ejs');
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('Listen to ', port));
 
+// helper
+app.locals.util = require('./util');
+
 // Middlewares
 // static files
 app.use('/assets', express.static(path.join(__dirname, 'static')));

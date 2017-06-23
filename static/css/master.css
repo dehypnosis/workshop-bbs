@@ -58,8 +58,30 @@ main > section {
   width: 100px;
 }
 .board .row > .title {
-  width: calc(100% - 320px);
+  width: calc(100% - 380px);
+}
+.board .row > .hit {
+  width: 60px;
 }
 .board .row > .date {
   width: 100px;
+}
+
+
+.board .paging {
+  margin: 20px auto;
+  text-align: center;
+}
+.board .paging > a {
+  display: inline-block;
+  border: 1px solid gray;
+  padding: 5px 10px;
+  margin: 0 5px;
+  text-decoration: none;
+  color: black;
+}
+.board .paging > a.current {
+  background: red;
+  border-color:red;
+  color: white;
 }

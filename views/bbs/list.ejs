@@ -10,6 +10,7 @@
         <div class="id">#</div>
         <div class="title">제목</div>
         <div class="author">글쓴이</div>
+        <div class="hit">조회</div>
         <div class="date">날짜</div>
       </div>
     </div>
@@ -18,13 +19,23 @@
       <div class="row">
         <div class="id center"><%=article.id%></div>
         <div class="title"><%=article.title%></div>
-        <div class="author center"><%=article.user_id%></div>
-        <div class="date center"><%=article.createdAt%></div>
+        <div class="author center"><%=article.author%></div>
+        <div class="hit center"><%=article.hit%></div>
+        <div class="date center"><%=util.date(article.createdAt)%></div>
       </div>
       <% }); %>
     </div>
-    <div class="footer"></div>
-
+    <div class="footer">
+      <div class="paging">
+        <% if (paging.first) { %><a href="<%=query({page: paging.first})%>" class="first">처음</a><% } %>
+        <% if (paging.prev) { %><a href="<%=query({page: paging.prev})%>" class="prev">이전</a><% } %>
+        <% for(let p=paging.start; p<=paging.end; p++) { %>
+          <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%=query({page: p})%>"><%=p%></a>
+        <% } %>
+        <% if (paging.next) { %><a href="<%=query({page: paging.next})%>" class="next">다음</a><% } %>
+        <% if (paging.last) { %><a href="<%=query({page: paging.last})%>" class="last">끝</a><% } %>
+      </div>
+    </div>
   <% } %>
 </div>
 
