@@ -1,6 +1,12 @@
 <% include ../header %>
 
 <div class="board">
+  <% if (article) { %>
+  <div class="article">
+    <%=JSON.stringify(article)%>
+  </div>
+  <% } %>
+
   <%  if (articles.length == 0) { %>
   <p class="empty">게시물이 없습니다.</p>
 
@@ -18,7 +24,7 @@
       <% articles.forEach(article => { %>
       <div class="row">
         <div class="id center"><%=article.id%></div>
-        <div class="title"><%=article.title%></div>
+        <div class="title"><a href="<%-buildQuery({id: article.id})%>"><%=article.title%></a></div>
         <div class="author center"><%=article.author%></div>
         <div class="hit center"><%=article.hit%></div>
         <div class="date center"><%=util.date(article.createdAt)%></div>
@@ -28,16 +34,16 @@
   <% } %>
   <div class="footer">
     <div class="paging">
-      <% if (paging.first) { %><a href="<%-buildQuery({page: paging.first})%>" class="first">처음</a><% } %>
-      <% if (paging.prev) { %><a href="<%-buildQuery({page: paging.prev})%>" class="prev">이전</a><% } %>
+      <% if (paging.first) { %><a href="<%-buildQuery({page: paging.first, id: null})%>" class="first">처음</a><% } %>
+      <% if (paging.prev) { %><a href="<%-buildQuery({page: paging.prev, id: null})%>" class="prev">이전</a><% } %>
       <% for(let p=paging.start; p<=paging.end; p++) { %>
-        <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%-buildQuery({page: p})%>"><%=p%></a>
+        <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%-buildQuery({page: p, id: null})%>"><%=p%></a>
       <% } %>
-      <% if (paging.next) { %><a href="<%-buildQuery({page: paging.next})%>" class="next">다음</a><% } %>
-      <% if (paging.last) { %><a href="<%-buildQuery({page: paging.last})%>" class="last">끝</a><% } %>
+      <% if (paging.next) { %><a href="<%-buildQuery({page: paging.next, id: null})%>" class="next">다음</a><% } %>
+      <% if (paging.last) { %><a href="<%-buildQuery({page: paging.last, id: null})%>" class="last">끝</a><% } %>
     </div>
     <form class="search">
-      <%-buildHiddens({page: null, search: null})%>
+      <%-buildHiddens({page: null, search: null, id: null})%>
       <input type="text" name="search" placeholder="Search..." value="<%=query.search%>">
       <input type="submit">
     </form>

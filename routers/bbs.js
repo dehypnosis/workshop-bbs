@@ -67,10 +67,38 @@ router.get('/', (req,res) => {
         if (paging.first == paging.prev) paging.prev = null;
         if (paging.last == paging.next) paging.next = null;
 
-        res.render('bbs/list', {
-          articles: rows,
-          paging
-        });
+        // read article
+        let id = req.query.id;
+        if (id) {
+          db.query(`select * from articles where id = ?`, [id], (err, articleRows) => {
+            if (err) throw err;
+
+            let article = articleRows[0] || null;
+            if (article) {
+              if (!req.session.hits) {
+                req.session.hits = [];
+              }
+              if (req.session.hits.indexOf(article.id) == -1) {
+                db.query(`update articles set hit = hit+1 where id = ?`, [id]);
+                req.session.hits.push(article.id);
+              }
+            }
+
+            res.render('bbs/list', {
+              articles: rows,
+              paging,
+              article
+            });
+          });
+        } else {
+          res.render('bbs/list', {
+            articles: rows,
+            paging,
+            article: null
+          });
+        }
+
+
       });
     });
 });
