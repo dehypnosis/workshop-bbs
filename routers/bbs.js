@@ -16,23 +16,39 @@ router.get('/', (req,res) => {
   let page = Math.max(1, parseInt(req.query.page || 1));
   let nPage = 5;
   let nBlock = 2;
+  let search = (req.query.search || '').trim();
 
-  db.query(`
+  let query1, params1, query2, params2;
+  if (search != '') {
+    search = '%'+search+'%';
+    query1 = `
+      select a.id, a.title, a.createdAt, a.hit, u.name author
+      from articles a left join users u on a.user_id = u.id
+      where board_id = ? and a.title like ?
+      order by id desc
+      limit ?, ?
+      `;
+    params1 = [board.id, search, (page-1)*nPage, nPage];
+    query2 = `select count(*) as count from articles where board_id = ? and title like ?`;
+    params2 = [board.id, search];
+  } else {
+    query1 = `
       select a.id, a.title, a.createdAt, a.hit, u.name author
       from articles a left join users u on a.user_id = u.id
       where board_id = ?
       order by id desc
       limit ?, ?
-      `, [
-        board.id,
-        (page-1)*nPage,
-        nPage
-      ],
-    (err, rows) => {
+      `;
+    params1 = [board.id, (page-1)*nPage, nPage];
+    query2 = `select count(*) as count from articles where board_id = ?`;
+    params2 = [board.id];
+  }
+
+  db.query(query1, params1, (err, rows) => {
       if (err) throw err;
 
       // pagination
-      db.query(`select count(*) as count from articles where board_id = ?`, [board.id], (err, results) => {
+      db.query(query2, params2, (err, results) => {
         if (err) throw err;
 
         let itemTotal = results[0].count;
@@ -46,7 +62,7 @@ router.get('/', (req,res) => {
           first: cBlock > 1 ? 1 : null,
           last: cBlock < bTotal ? pTotal : null,
           start: (cBlock-1)*nBlock + 1,
-          end: cBlock == bTotal ? pTotal : cBlock*nBlock,
+          end: cBlock >= bTotal ? pTotal : cBlock*nBlock,
         };
         if (paging.first == paging.prev) paging.prev = null;
         if (paging.last == paging.next) paging.next = null;

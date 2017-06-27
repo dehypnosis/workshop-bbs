@@ -85,3 +85,6 @@ main > section {
   border-color:red;
   color: white;
 }
+.board .search, .board .empty {
+  text-align: center;
+}

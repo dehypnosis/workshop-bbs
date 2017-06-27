@@ -2,7 +2,7 @@
 
 <div class="board">
   <%  if (articles.length == 0) { %>
-  <p>게시물이 없습니다.</p>
+  <p class="empty">게시물이 없습니다.</p>
 
   <% } else { %>
     <div class="header">
@@ -25,18 +25,23 @@
       </div>
       <% }); %>
     </div>
-    <div class="footer">
-      <div class="paging">
-        <% if (paging.first) { %><a href="<%=query({page: paging.first})%>" class="first">처음</a><% } %>
-        <% if (paging.prev) { %><a href="<%=query({page: paging.prev})%>" class="prev">이전</a><% } %>
-        <% for(let p=paging.start; p<=paging.end; p++) { %>
-          <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%=query({page: p})%>"><%=p%></a>
-        <% } %>
-        <% if (paging.next) { %><a href="<%=query({page: paging.next})%>" class="next">다음</a><% } %>
-        <% if (paging.last) { %><a href="<%=query({page: paging.last})%>" class="last">끝</a><% } %>
-      </div>
-    </div>
   <% } %>
+  <div class="footer">
+    <div class="paging">
+      <% if (paging.first) { %><a href="<%-buildQuery({page: paging.first})%>" class="first">처음</a><% } %>
+      <% if (paging.prev) { %><a href="<%-buildQuery({page: paging.prev})%>" class="prev">이전</a><% } %>
+      <% for(let p=paging.start; p<=paging.end; p++) { %>
+        <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%-buildQuery({page: p})%>"><%=p%></a>
+      <% } %>
+      <% if (paging.next) { %><a href="<%-buildQuery({page: paging.next})%>" class="next">다음</a><% } %>
+      <% if (paging.last) { %><a href="<%-buildQuery({page: paging.last})%>" class="last">끝</a><% } %>
+    </div>
+    <form class="search">
+      <%-buildHiddens({page: null, search: null})%>
+      <input type="text" name="search" placeholder="Search..." value="<%=query.search%>">
+      <input type="submit">
+    </form>
+  </div>
 </div>
 
 <% include ../footer %>
