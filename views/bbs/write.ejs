@@ -1,5 +1,16 @@
 <% include ../header %>
 
-write.ejs
+<div class="board">
+  <div class="edit">
+    <form name="article" method="post" onsubmit="return bbs.Article.onSubmit(this, event)">
+      <input type="text" name="title" placeholder="제목을 입력하세요." value="<%=article.title%>">
+      <textarea name="content" rows="10" placeholder="내용을 입력하세요."><%=article.content%></textarea>
+      <div class="buttons">
+        <input type="submit" value="저장">
+        <input type="button" value="취소" onclick="bbs.Article.cancel()">
+      </div>
+    </form>
+  </div>
+</div>
 
 <% include ../footer %>

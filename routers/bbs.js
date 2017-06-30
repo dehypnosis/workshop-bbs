@@ -70,7 +70,7 @@ router.get('/', (req,res) => {
         // read article
         let id = req.query.id;
         if (id) {
-          db.query(`select * from articles where id = ?`, [id], (err, articleRows) => {
+          db.query(`select a.*, u.name author from articles a left join users u on a.user_id = u.id where a.id = ?`, [id], (err, articleRows) => {
             if (err) throw err;
 
             let article = articleRows[0] || null;
@@ -103,3 +103,89 @@ router.get('/', (req,res) => {
     });
 });
 
+router.get('/write', (req,res) => {
+  if (!req.session.user) return res.redirect('/user/login');
+  res.render('bbs/write', {article:{}});
+});
+
+router.post('/write', (req,res) => {
+  let boardName = req.query.board;
+  let board = res.locals.boards.find(b => b.name == boardName);
+  let user = req.session.user;
+  let title = (req.body.title || '').trim();
+  let content = (req.body.content || '').trim();
+
+  if (!board || !user || !title || !content) return res.status(400).end();
+
+  db.query(`insert into articles (board_id, user_id, title, content) values (?, ?, ?, ?)`,
+    [board.id, user.id, title, content],
+    (err, result) => {
+      if (err) throw err;
+
+      res.redirect(`/?board=${boardName}&id=${result.insertId}`);
+    });
+});
+
+router.post('/delete', (req,res) => {
+  if (!req.session.user) return res.status(400).end();
+
+  let articleId = req.query.id;
+  let boardName = req.query.board;
+  
+  if (req.session.user.isAdmin) {
+    db.query(`delete from articles where id = ?`, [articleId], err => {
+      if (err) throw err;
+
+      res.redirect(`/?board=${boardName}`);
+    });
+
+  } else {
+
+    let userId = req.session.user.id;
+    db.query(`delete from articles where id = ? and user_id = ?`, [articleId, userId], err => {
+      if (err) throw err;
+
+      res.redirect(`/?board=${boardName}`);
+    });
+  }
+});
+
+router.get('/update', (req,res) => {
+  let articleId = req.query.id;
+  db.query(`select * from articles where id = ?`, [articleId], (err, rows) => {
+    if (err) throw err;
+
+    let article = rows[0];
+    res.render('bbs/write', {article});
+  });
+});
+
+router.post('/update', (req,res) => {
+  if (!req.session.user) return res.status(400).end();
+
+  let articleId = req.query.id;
+  let boardName = req.query.board;
+  let board = res.locals.boards.find(b => b.name == boardName);
+  let user = req.session.user;
+  let title = (req.body.title || '').trim();
+  let content = (req.body.content || '').trim();
+
+  if (!board || !user || !title || !content) return res.status(400).end();
+
+  if (req.session.user.isAdmin) {
+    db.query(`update articles set title = ?, content = ? where id = ?`, [title, content, articleId], err => {
+      if (err) throw err;
+
+      res.redirect(`/?board=${boardName}&id=${articleId}`);
+    });
+
+  } else {
+
+    let userId = req.session.user.id;
+    db.query(`update articles set title = ?, content = ? where id = ? and user_id = ?`, [title, content, articleId, userId], err => {
+      if (err) throw err;
+
+      res.redirect(`/?board=${boardName}&id=${articleId}`);
+    });
+  }
+});

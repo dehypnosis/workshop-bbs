@@ -3,7 +3,24 @@
 <div class="board">
   <% if (article) { %>
   <div class="article">
-    <%=JSON.stringify(article)%>
+    <div class="header">
+      <div class="title"><%=article.title%></div>
+      <div>
+        <span class="author"><%=article.author%></span>
+        <span class="date"><%=util.date(article.createdAt)%></span>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+      <%=article.content%>
+      </div>
+    </div>
+    <div class="footer">
+      <% if (user.isAdmin || user.id == article.user_id) { %>
+        <a href="#" onclick="bbs.Article.update('<%=board.name%>', <%=article.id%>); return false" class="btn">수정</a>
+        <a href="#" onclick="bbs.Article.delete('<%=board.name%>', <%=article.id%>); return false" class="btn">삭제</a>
+      <% } %>
+    </div>
   </div>
   <% } %>
 
@@ -45,8 +62,11 @@
     <form class="search">
       <%-buildHiddens({page: null, search: null, id: null})%>
       <input type="text" name="search" placeholder="Search..." value="<%=query.search%>">
-      <input type="submit">
+      <input type="submit" value="검색">
     </form>
+    <div class="btns">
+      <a class="btn" href="/write?board=<%=board.name%>">글쓰기</a>
+    </div>
   </div>
 </div>
 

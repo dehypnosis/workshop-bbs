@@ -88,3 +88,72 @@ main > section {
 .board .search, .board .empty {
   text-align: center;
 }
+
+.board .article {
+  border-bottom:1px solid gray;
+  padding:20px 40px;
+  margin-bottom: 30px;
+}
+
+.board .article .header {
+  border-bottom: 1px solid gray;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.board .article .header .title {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+}
+.board .article .header .author {
+  font-size: 1.2em;
+}
+.board .article .header .date {
+  font-size: 0.8em;
+  font-style: italic;
+}
+.board .article .body {
+  padding: 30px 0;
+}
+
+.board .edit form {
+  width: 85%;
+  margin:0 auto;
+}
+.board .edit textarea, .board .edit input[type=text] {
+  width: 100%;
+  display:block;
+  margin:0 0 10px 0;
+  border: 1px solid gray;
+  font-size: 1.5em;
+  padding: 8px 16px;
+}
+.board .edit textarea{
+  resize: vertical;
+}
+.board .edit .buttons {
+  text-align: center;
+}
+.board .edit input[type=submit], .board .edit input[type=button] {
+  width:20%;
+  margin:0 auto;
+  display: inline-block;
+  font-size: 2em;
+  curosr: pointer;
+}
+.board .edit input[type=submit] {
+  background: red;
+  color: white;
+}
+.board .edit input[type=button] {
+  background: white;
+}
+.board .article .footer {
+  text-align: right;
+}
+.btn {
+  border: 1px solid black;
+  background: white;
+  color: black;
+  text-decoration: none;
+  padding:5px 15px;
+}
