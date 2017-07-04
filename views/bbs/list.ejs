@@ -12,13 +12,30 @@
     </div>
     <div class="body">
       <div class="content">
-      <%=article.content%>
+        <%-article.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')%>
+      </div>
+      <div class="comments">
+        <% comments.forEach(comment => { %>
+        <div class="item">
+          <div class="header">
+            <span class="author"><%=comment.author%></span>
+            <span class="date"><%=comment.author%></span>
+          </div>
+          <div class="body"><%=comment.content%></div>
+          <div class="footer">
+            <% if (user && (user.isAdmin || user.id == comment.user_id)) { %>
+            <a href="#" onclick="bbs.Article.update('<%=board.name%>', <%=article.id%>); return false" class="btn">수정</a>
+            <a href="#" onclick="bbs.Article.delete('<%=board.name%>', <%=article.id%>); return false" class="btn">삭제</a>
+            <% } %>
+          </div>
+        </div>
+        <% }); %>
       </div>
     </div>
     <div class="footer">
-      <% if (user.isAdmin || user.id == article.user_id) { %>
-        <a href="#" onclick="bbs.Article.update('<%=board.name%>', <%=article.id%>); return false" class="btn">수정</a>
-        <a href="#" onclick="bbs.Article.delete('<%=board.name%>', <%=article.id%>); return false" class="btn">삭제</a>
+      <% if (user && (user.isAdmin || user.id == article.user_id)) { %>
+      <a href="#" onclick="bbs.Article.update('<%=board.name%>', <%=article.id%>); return false" class="btn">수정</a>
+      <a href="#" onclick="bbs.Article.delete('<%=board.name%>', <%=article.id%>); return false" class="btn">삭제</a>
       <% } %>
     </div>
   </div>
@@ -28,33 +45,33 @@
   <p class="empty">게시물이 없습니다.</p>
 
   <% } else { %>
-    <div class="header">
-      <div class="row">
-        <div class="id">#</div>
-        <div class="title">제목</div>
-        <div class="author">글쓴이</div>
-        <div class="hit">조회</div>
-        <div class="date">날짜</div>
-      </div>
+  <div class="header">
+    <div class="row">
+      <div class="id">#</div>
+      <div class="title">제목</div>
+      <div class="author">글쓴이</div>
+      <div class="hit">조회</div>
+      <div class="date">날짜</div>
     </div>
-    <div class="body">
-      <% articles.forEach(article => { %>
-      <div class="row">
-        <div class="id center"><%=article.id%></div>
-        <div class="title"><a href="<%-buildQuery({id: article.id})%>"><%=article.title%></a></div>
-        <div class="author center"><%=article.author%></div>
-        <div class="hit center"><%=article.hit%></div>
-        <div class="date center"><%=util.date(article.createdAt)%></div>
-      </div>
-      <% }); %>
+  </div>
+  <div class="body">
+    <% articles.forEach(article => { %>
+    <div class="row">
+      <div class="id center"><%=article.id%></div>
+      <div class="title"><a href="<%-buildQuery({id: article.id})%>"><%=article.title%></a></div>
+      <div class="author center"><%=article.author%></div>
+      <div class="hit center"><%=article.hit%></div>
+      <div class="date center"><%=util.date(article.createdAt)%></div>
     </div>
+    <% }); %>
+  </div>
   <% } %>
   <div class="footer">
     <div class="paging">
       <% if (paging.first) { %><a href="<%-buildQuery({page: paging.first, id: null})%>" class="first">처음</a><% } %>
       <% if (paging.prev) { %><a href="<%-buildQuery({page: paging.prev, id: null})%>" class="prev">이전</a><% } %>
       <% for(let p=paging.start; p<=paging.end; p++) { %>
-        <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%-buildQuery({page: p, id: null})%>"><%=p%></a>
+      <a class="<%=(p == paging.current) ? 'current' : ''%>" href="<%-buildQuery({page: p, id: null})%>"><%=p%></a>
       <% } %>
       <% if (paging.next) { %><a href="<%-buildQuery({page: paging.next, id: null})%>" class="next">다음</a><% } %>
       <% if (paging.last) { %><a href="<%-buildQuery({page: paging.last, id: null})%>" class="last">끝</a><% } %>

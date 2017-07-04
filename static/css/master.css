@@ -150,6 +150,19 @@ main > section {
 .board .article .footer {
   text-align: right;
 }
+.board .comments {
+  margin-left: 50px;
+  margin-top: 30px;
+}
+.board .comments .item {
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  margin: 20px;
+}
+.board .comments .item .body {
+  padding: 15px 0;
+}
+
 .btn {
   border: 1px solid black;
   background: white;
