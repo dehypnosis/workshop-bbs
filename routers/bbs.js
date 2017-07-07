@@ -73,37 +73,23 @@ router.get('/', (req,res) => {
           db.query(`select a.*, u.name author from articles a left join users u on a.user_id = u.id where a.id = ?`, [id], (err, articleRows) => {
             if (err) throw err;
 
-            let article = articleRows[0];
-            if (!article) {
-              return res.render('bbs/list', {
-                articles: rows,
-                paging,
-                article: null,
-                comments: null
-              });
+            let article = articleRows[0] || null;
+            if (article) {
+              // hit article
+              if (!req.session.hits) {
+                req.session.hits = [];
+              }
+              if (req.session.hits.indexOf(article.id) == -1) {
+                db.query(`update articles set hit = hit+1 where id = ?`, [id]);
+                req.session.hits.push(article.id);
+              }
             }
 
-            // hit article
-            if (!req.session.hits) {
-              req.session.hits = [];
-            }
-            if (req.session.hits.indexOf(article.id) == -1) {
-              db.query(`update articles set hit = hit+1 where id = ?`, [id]);
-              req.session.hits.push(article.id);
-            }
-
-            // get comments
-            db.query(`select c.*, u.name author from comments c join users u on u.id = c.user_id where article_id = ?`, [article.id],
-              (err, comments) => {
-                if (err) throw err;
-
-                res.render('bbs/list', {
-                  articles: rows,
-                  paging,
-                  article,
-                  comments
-                });
-              });
+            res.render('bbs/list', {
+              articles: rows,
+              paging,
+              article
+            });
           });
         } else {
           res.render('bbs/list', {
@@ -210,13 +196,17 @@ router.post('/update', (req,res) => {
 /** comments **/
 router.get('/comments', (req,res) => {
   let articleId = req.query.articleId;
-  if (!articleId) return res.status(400).end();
+  if (!articleId || isNaN(articleId)) return res.status(400).end();
 
   db.query(`select c.*, u.name author from comments c join users u on u.id = c.user_id where c.article_id = ?`, [articleId],
     (err, rows) => {
       if (err) throw err;
 
-      res.json(rows);
+      let user = req.session.user;
+      res.json(rows.map(comment => {
+        comment.editable = !!(user && (user.id == comment.user_id || user.isAdmin));
+        return comment;
+      }));
     });
 });
 

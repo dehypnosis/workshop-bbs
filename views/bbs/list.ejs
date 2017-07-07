@@ -14,23 +14,26 @@
       <div class="content">
         <%-article.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')%>
       </div>
-      <div class="comments">
-        <% comments.forEach(comment => { %>
-        <div class="item">
+      <div class="comments" data-bbs-comments data-article-id="<%=article.id%>">
+        <div class="item" style="display:none" data-bbs-comment-template>
           <div class="header">
-            <span class="author"><%=comment.author%></span>
-            <span class="date"><%=comment.author%></span>
+            <span class="author" data-author>author</span>
+            <span class="date" data-date>date</span>
           </div>
-          <div class="body"><%=comment.content%></div>
-          <div class="footer">
-            <% if (user && (user.isAdmin || user.id == comment.user_id)) { %>
-            <a href="#" onclick="bbs.Article.update('<%=board.name%>', <%=article.id%>); return false" class="btn">수정</a>
-            <a href="#" onclick="bbs.Article.delete('<%=board.name%>', <%=article.id%>); return false" class="btn">삭제</a>
-            <% } %>
+          <div class="body" data-content>content</div>
+          <div class="footer" data-if-editable>
+            <a href="#" data-update-btn class="btn">수정</a>
+            <a href="#" data-delete-btn class="btn">삭제</a>
           </div>
         </div>
-        <% }); %>
       </div>
+      <% if (user) { %>
+      <form data-bbs-comment-create>
+        <input type="hidden" name="articleId" value="<%=article.id%>">
+        <textarea name="content"></textarea>
+        <input type="submit">
+      </form>
+      <% } %>
     </div>
     <div class="footer">
       <% if (user && (user.isAdmin || user.id == article.user_id)) { %>
