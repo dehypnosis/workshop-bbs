@@ -225,6 +225,7 @@ router.post('/comments', (req,res) => {
           if (err) throw err;
 
           let comment = rows[0] || null;
+          comment.editable = true;
           res.json(comment);
         });
     });
@@ -242,15 +243,16 @@ router.put('/comments/:id', (req,res) => {
         if (err) throw err;
         if (result.affectedRows == 0) return res.status(500).end();
 
-        db.query(`select * from comments where id = ?`, [commentId], (err, rows) => {
+        db.query(`select c.*, u.name author from comments c join users u on u.id = c.user_id where c.id = ?`, [commentId], (err, rows) => {
           if (err) throw err;          
 
           let comment = rows[0] || null;
+          comment.editable = true;
           res.json(comment);
         });
       });
   } else {
-    db.query(`update comments set content = ? where id = ? and user_id = ?`, [content, commentId, user.id],
+    db.query(`select c.*, u.name author from comments c join users u on u.id = c.user_id where c.id = ?`, [content, commentId, user.id],
       (err, result) => {
         if (err) throw err;
         if (result.affectedRows == 0) return res.status(500).end();
@@ -259,6 +261,7 @@ router.put('/comments/:id', (req,res) => {
           if (err) throw err;          
 
           let comment = rows[0] || null;
+          comment.editable = true;
           res.json(comment);
         });
       });

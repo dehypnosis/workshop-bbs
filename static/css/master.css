@@ -163,6 +163,45 @@ main > section {
   padding: 15px 0;
 }
 
+/** comment form and content div **/
+.board .comments .item [data-update-form-slot] {
+  display: none;
+}
+.board .comments .item.editing [data-bbs-comment-update],
+.board .comments .item.editing [data-update-form-slot]{
+  display:block;
+}
+.board .comments .item.editing [data-content]{
+  display:none;
+}
+
+/** comment btns **/
+.board .comments .item [data-cancel-update-btn]{
+  display:none;
+}
+.board .comments .item.editing [data-cancel-update-btn]{
+  display:inline-block;
+}
+.board .comments .item.editing [data-update-btn]{
+  display:none;
+}
+
+.board .comment-form {
+  text-align: right;
+}
+.board .comment-form input[type=submit] {
+  font-size: 1.3em;
+}
+.board .comment-form textarea {
+  width: 100%;
+  padding: 4px 8px;
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+.board .comment-form.update {
+  display: none;
+}
+
 .btn {
   border: 1px solid black;
   background: white;

@@ -47,6 +47,7 @@
     this.createdAt = data.createdAt;
   };
   Comment.instances = [];
+  Comment.editingInstance = null;
   Comment.prototype.delete = function(){
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
@@ -61,7 +62,17 @@
       });
   };
   Comment.prototype.update = function(){
-    
+    Comment.$container.find('.editing').removeClass('editing');
+    Comment.editingInstance = this;
+
+    this.$el.addClass('editing')
+      .find('[data-update-form-slot]')
+      .append(Comment.$updateForm);
+    Comment.$updateForm.find('textarea').val(this.content);
+  };
+  Comment.prototype.cancelUpdate = function(){
+    this.$el.removeClass('editing');
+    Comment.editingInstance = null;
   };
 
   Comment.get = function(articleId){
@@ -88,7 +99,27 @@
       });
   };
 
+  Comment._update = function(content) {
+    var comment = Comment.editingInstance;
+    $.ajax('/comments/' + comment.id, {
+      data: {content: content},
+      method: 'put'
+    })
+      .then(function(data){
+        var index = Comment.instances.indexOf(comment);
+        Comment.instances[index] = new Comment(data);
+        Comment.$updateForm.appendTo("body");
+        Comment.editingInstance = null;
+        Comment.render();
+      })
+      .catch(function() {
+        alert('내용을 입력하세요!');
+        Comment.$updateForm[0].content.focus();
+      });
+  };
+
   Comment.$createForm = $('form[data-bbs-comment-create]');
+  Comment.$updateForm = $('form[data-bbs-comment-update]');
   Comment.$container = $("[data-bbs-comments]");
   Comment.$template = $("[data-bbs-comment-template]");
   Comment.render = function(){
@@ -103,7 +134,9 @@
       $comment.find("[data-author]").text(comment.author);
       $comment.find("[data-date]").text(comment.createdAt.substr(0,10));
       $comment.find("[data-content]").html(comment.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>'));
+      $comment.find("textarea").text(comment.content);
       if (!comment.editable) $comment.find("[data-if-editable]").remove();
+      comment.$el = $comment;
       
       return $comment;
     });
@@ -132,10 +165,24 @@
         e.preventDefault();
       });
 
+      // cancel update
+      Comment.$container.on('click', '[data-cancel-update-btn]', function(e){
+        var comment = $(this).closest('[data-bbs-comment]').data('comment');
+        comment.cancelUpdate();
+        e.preventDefault();
+      });
+
       // create
       Comment.$createForm.submit(function(e) {
         e.preventDefault();
         Comment.create(this.articleId.value, this.content.value);
+      });
+
+      // update
+      Comment.$updateForm.submit(function(e) {
+        console.log('update...');
+        e.preventDefault();
+        Comment._update(this.content.value);
       });
     }
   });

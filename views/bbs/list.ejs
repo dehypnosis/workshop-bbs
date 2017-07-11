@@ -20,18 +20,24 @@
             <span class="author" data-author>author</span>
             <span class="date" data-date>date</span>
           </div>
-          <div class="body" data-content>content</div>
+          <div class="body" data-content>content.replace...</div>
+          <div data-update-form-slot></div>
           <div class="footer" data-if-editable>
             <a href="#" data-update-btn class="btn">수정</a>
+            <a href="#" data-cancel-update-btn class="btn">취소</a>
             <a href="#" data-delete-btn class="btn">삭제</a>
           </div>
         </div>
       </div>
       <% if (user) { %>
-      <form data-bbs-comment-create>
+      <form class="comment-form create" data-bbs-comment-create>
         <input type="hidden" name="articleId" value="<%=article.id%>">
         <textarea name="content"></textarea>
-        <input type="submit">
+        <input type="submit" class="btn" value="저장">
+      </form>
+      <form class="comment-form update" data-bbs-comment-update>
+        <textarea name="content"></textarea>
+        <input type="submit" class="btn" value="저장">
       </form>
       <% } %>
     </div>
